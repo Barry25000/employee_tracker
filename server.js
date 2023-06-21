@@ -50,26 +50,37 @@ function options() {
       } else {
         updateEmployeeRole();
       }
+    })
+    .catch((err) => {
+      console.log(err);
     });
 }
 
 //perform db manipulation
 var viewAllDepartments = () => {
-  console.log("hello");
+  db.query("SELECT * FROM department", function (err, results) {
+    console.log(results);
+  });
   options();
 };
 var viewAllRoles = () => {
-  console.log("hello1");
+  db.query("SELECT * FROM role", function (err, results) {
+    console.log(results);
+  });
   options();
 };
 
 var viewAllEmployees = () => {
-  console.log("hello2");
+  db.query("SELECT * FROM employee", function (err, results) {
+    console.log(results);
+  });
   options();
 };
 
 var addDepartment = () => {
-  console.log("hello3");
+  db.insert("SELECT * FROM department", function (err, results) {
+    console.log(results);
+  });
   options();
 };
 
