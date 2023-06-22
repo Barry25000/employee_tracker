@@ -34,7 +34,6 @@ function options() {
     ])
     // Takes user choice, checks with equality, and then runs corresponding function
     .then((answer) => {
-      console.log(answer);
       if (answer.employeeTracker === "View All Departments") {
         viewAllDepartments();
       } else if (answer.employeeTracker === "View All Roles") {
@@ -113,6 +112,7 @@ var addDepartment = () => {
       console.log(err);
     });
 };
+
 var addRole = () => {
   db.query("SELECT * FROM department", function (err, results) {
     console.log(results);
@@ -157,15 +157,99 @@ var addRole = () => {
       });
   });
 };
+///////////////////////////////////////////////////////////////////////////////////
+// var addEmployee = () => {
+//   db.query("SELECT * FROM role", function (err, results) {
+//     const roleName = results.map((role) => role.title);
+//     console.log("hey", roleName);
 
-var addEmployee = () => {
-  console.log("hello5");
-  options();
-};
+//     inquirer
+//       .prompt([
+//         {
+//           type: "input",
+//           message: "What is the first name of the new employee?",
+//           name: "firstName",
+//         },
+//         {
+//           type: "input",
+//           message: "What is the last name of the new employee?",
+//           name: "lastName",
+//         },
+//         {
+//           type: "list",
+//           message: "What is the roll of the new employee?",
+//           choices: roleName,
+//           name: "role",
+//         },
+//         {
+//           type: "input",
+//           message: "Who is the manager of the new employee?",
+//           name: "lastName",
+//         },
+//       ])
+//         .then((answer) => {
+//           const managerId = results.find((b) => b.first_name === answer.role).id;
+//           console.log("hey you");
+//           db.query(
+//             "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)",
+//             [answer.firstName, answer.lastName, answer.role, managerId],
+//             function (error, results, fields) {
+//               if (error) console.log(error);
+//               console.log(results.insertId);
+//               options();
+//             }
+//           );
+//         })
+//       .catch((err) => {
+//         console.log(err);
+//       });
+//     options();
+//   });
+// };
 
 var updateEmployeeRole = () => {
-  console.log("hello6");
-  options();
+  db.query("SELECT * FROM role", function (err, results) {
+    const roleName = results.map((role) => role.title);
+
+    db.query("SELECT * FROM employee", function (err, results) {
+      const employeeName = results.map(
+        (employee) => employee.first_name + " " + employee.last_name
+      );
+
+      inquirer.prompt([
+        {
+          type: "list",
+          message: "What is the name of the employee?",
+          choices: employeeName,
+          name: "name",
+        },
+        {
+          type: "list",
+          message: "What is the new roll of the employee?",
+          choices: roleName,
+          name: "role",
+        },
+      ]);
+      console
+        .log(answer.name)
+        .then((answer) => {
+          const roleId = results.find((b) => b.role_id === answer.employee).id;
+
+          db.query(
+            "INSERT INTO employee (role) VALUES (?)",
+            [answer.employee],
+            function (error, results, fields) {
+              if (error) console.log(error);
+              console.log(results.insertId);
+              options();
+            }
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+  });
 };
 
 options();
