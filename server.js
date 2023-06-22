@@ -216,31 +216,30 @@ var updateEmployeeRole = () => {
         (employee) => employee.first_name + " " + employee.last_name
       );
 
-      inquirer.prompt([
-        {
-          type: "list",
-          message: "What is the name of the employee?",
-          choices: employeeName,
-          name: "name",
-        },
-        {
-          type: "list",
-          message: "What is the new roll of the employee?",
-          choices: roleName,
-          name: "role",
-        },
-      ]);
-      console
-        .log(answer.name)
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            message: "What is the name of the employee?",
+            choices: employeeName,
+            name: "name",
+          },
+          {
+            type: "list",
+            message: "What is the new roll of the employee?",
+            choices: roleName,
+            name: "role",
+          },
+        ])
         .then((answer) => {
-          const roleId = results.find((b) => b.role_id === answer.employee).id;
+          const roleId = results.find((b) => b.role_id === answer.employee);
 
           db.query(
-            "INSERT INTO employee (role) VALUES (?)",
-            [answer.employee],
+            "INSERT INTO employee (role_id) VALUES (?)",
+            [roleId],
             function (error, results, fields) {
               if (error) console.log(error);
-              console.log(results.insertId);
+
               options();
             }
           );
