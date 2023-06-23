@@ -162,10 +162,6 @@ var addRole = () => {
 };
 ///////////////////////////////////////////////////////////////////////////////////
 var addEmployee = () => {
-  // db.query("SELECT * FROM role", function (err, results) {
-  //   const roleName = results.map((role) => role.title);
-  //   console.log("hey", roleName);
-
   db.query("SELECT * FROM role", function (err, results) {
     const roleName = results.map((role) => {
       return {
@@ -173,67 +169,71 @@ var addEmployee = () => {
         value: `${role.id}`,
       };
     });
-    // db.query("SELECT * FROM employee", function (err, results) {
-    //   const manager = results.map((employee) => {
-    //     return {
-    //       name: `${employee.manager_id}`,
-    //       // value: `${role.id}`,
-    //     };
-    //   });
-    console.log("hey", roleName);
 
-    inquirer
-      .prompt([
-        {
-          type: "input",
-          message: "What is the first name of the new employee?",
-          name: "firstName",
-        },
-        {
-          type: "input",
-          message: "What is the last name of the new employee?",
-          name: "lastName",
-        },
-        {
-          type: "list",
-          message: "What is the roll of the new employee?",
-          choices: roleName,
-          name: "role",
-        },
-        {
-          type: "input",
-          message: "Who is the manager of the new employee?",
-          name: "manager",
-        },
-      ])
-      .then((answer) => {
-        const managerId = results.find(
-          (b) => b.first_name === answer.manager
-        ).id;
-
-        // db.query(
-        //   "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)",
-        //   [answer.firstName, answer.lastName, answer.role, managerId],
-        //   function (error, results, fields) {
-        //     if (error) console.log(error);
-        //     console.log(results.insertId);
-
-        db.query(
-          "INSERT INTO employee SET first_name=? WHERE id=?",
-          [roleId, employeeId],
-          function (error, results, fields) {
-            if (error) console.log(error);
-            console.log("/n");
-            console.table(results);
-            options();
-          }
-        );
-      })
-      .catch((err) => {
-        console.log(err);
+    db.query("SELECT * FROM employee", function (err, results) {
+      const employeeNameArr = results.map((employee) => {
+        return {
+          name: `${employee.first_name}`,
+          value: `${employee.id}`,
+        };
       });
-    options();
-    // });
+      console.log("hey", roleName, employeeNameArr);
+
+      inquirer
+        .prompt([
+          {
+            type: "input",
+            message: "What is the first name of the new employee?",
+            name: "firstName",
+          },
+          {
+            type: "input",
+            message: "What is the last name of the new employee?",
+            name: "lastName",
+          },
+          {
+            type: "list",
+            message: "What is the roll of the new employee?",
+            choices: roleName,
+            name: "role",
+          },
+          {
+            type: "list",
+            message: "Who is the manager of the new employee?",
+            choices: employeeNameArr,
+            name: "manager",
+          },
+        ])
+        .then((answer) => {
+          // const managerId = results.find(
+          //   (b) => b.first_name === answer.manager
+          // ).id;
+
+          db.query(
+            // "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)",
+            "INSERT INTO employee (first_name, last_name) VALUES (?,?)",
+            // [answer.firstName, answer.lastName, answer.role, managerId],
+            [answer.firstName, answer.lastName],
+            function (error, results, fields) {
+              if (error) console.log(error);
+              // console.log(results.insertId);
+
+              // db.query(
+              //   "INSERT INTO employee SET first_name=? WHERE id=?",
+              //   [roleId, employeeId],
+              //   function (error, results, fields) {
+              //     if (error) console.log(error);
+              console.log("/n");
+              console.table(results);
+              options();
+            }
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      options();
+    });
   });
 };
 /////////////////////////////////////////////

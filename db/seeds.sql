@@ -3,6 +3,8 @@ VALUES ("Sales"),
        ("Engineering"),
        ("Finance"),
        ("Legal");
+       ("HR");
+       ("Testing");
 
 INSERT INTO role (title, salary, department_id)
 VALUES ("Salesperson", 80000, 01),
@@ -17,4 +19,8 @@ VALUES ("Salesperson", 80000, 01),
 VALUES ("Mike", "Chan", 1, null),
        ("Ashley", "Rodriguez", 2, null),
        ("Kevin", "Tupik", 2, 2);
+       ("Ben", "Ten", 4, null);
+       ("Bruce", "Jenner", 6, 4);
+       ("Betty", "White", 5, 2);
+       ("Larry", "Samon", 3, null);
         
