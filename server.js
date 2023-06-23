@@ -1,8 +1,6 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
 
-// const PORT = process.env.PORT || 3001;
-
 //connect to database
 const db = mysql.createConnection(
   {
@@ -58,6 +56,7 @@ function options() {
 //perform db manipulation
 var viewAllDepartments = () => {
   db.query("SELECT * FROM department", function (err, results) {
+    console.log("/n");
     console.table(results);
   });
   options();
@@ -68,6 +67,7 @@ var viewAllRoles = () => {
   `;
 
   db.query(sql, function (err, results) {
+    console.log("/n");
     console.table(results);
     console.log(err);
   });
@@ -82,6 +82,7 @@ var viewAllEmployees = () => {
     `;
 
   db.query(sql, function (err, results) {
+    console.log("/n");
     console.table(results);
     console.log(err);
   });
@@ -103,6 +104,7 @@ var addDepartment = () => {
         [answer.department],
         function (error, results, fields) {
           if (error) console.log(error);
+          console.log("/n");
           console.table(results.insertId);
           options();
         }
@@ -147,6 +149,7 @@ var addRole = () => {
           [answer.role, answer.salary, departmentId],
           function (error, results, fields) {
             if (error) console.log(error);
+            console.log("/n");
             console.table(results.insertId);
             options();
           }
@@ -158,54 +161,82 @@ var addRole = () => {
   });
 };
 ///////////////////////////////////////////////////////////////////////////////////
-// var addEmployee = () => {
-//   db.query("SELECT * FROM role", function (err, results) {
-//     const roleName = results.map((role) => role.title);
-//     console.log("hey", roleName);
+var addEmployee = () => {
+  // db.query("SELECT * FROM role", function (err, results) {
+  //   const roleName = results.map((role) => role.title);
+  //   console.log("hey", roleName);
 
-//     inquirer
-//       .prompt([
-//         {
-//           type: "input",
-//           message: "What is the first name of the new employee?",
-//           name: "firstName",
-//         },
-//         {
-//           type: "input",
-//           message: "What is the last name of the new employee?",
-//           name: "lastName",
-//         },
-//         {
-//           type: "list",
-//           message: "What is the roll of the new employee?",
-//           choices: roleName,
-//           name: "role",
-//         },
-//         {
-//           type: "input",
-//           message: "Who is the manager of the new employee?",
-//           name: "lastName",
-//         },
-//       ])
-//         .then((answer) => {
-//           const managerId = results.find((b) => b.first_name === answer.role).id;
-//           console.log("hey you");
-//           db.query(
-//             "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)",
-//             [answer.firstName, answer.lastName, answer.role, managerId],
-//             function (error, results, fields) {
-//               if (error) console.log(error);
-//               console.log(results.insertId);
-//               options();
-//             }
-//           );
-//         })
-//       .catch((err) => {
-//         console.log(err);
-//       });
-//     options();
-//   });
-// };
+  db.query("SELECT * FROM role", function (err, results) {
+    const roleName = results.map((role) => {
+      return {
+        name: `${role.title}`,
+        value: `${role.id}`,
+      };
+    });
+    // db.query("SELECT * FROM employee", function (err, results) {
+    //   const manager = results.map((employee) => {
+    //     return {
+    //       name: `${employee.manager_id}`,
+    //       // value: `${role.id}`,
+    //     };
+    //   });
+    console.log("hey", roleName);
+
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          message: "What is the first name of the new employee?",
+          name: "firstName",
+        },
+        {
+          type: "input",
+          message: "What is the last name of the new employee?",
+          name: "lastName",
+        },
+        {
+          type: "list",
+          message: "What is the roll of the new employee?",
+          choices: roleName,
+          name: "role",
+        },
+        {
+          type: "input",
+          message: "Who is the manager of the new employee?",
+          name: "manager",
+        },
+      ])
+      .then((answer) => {
+        const managerId = results.find(
+          (b) => b.first_name === answer.manager
+        ).id;
+
+        // db.query(
+        //   "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)",
+        //   [answer.firstName, answer.lastName, answer.role, managerId],
+        //   function (error, results, fields) {
+        //     if (error) console.log(error);
+        //     console.log(results.insertId);
+
+        db.query(
+          "INSERT INTO employee SET first_name=? WHERE id=?",
+          [roleId, employeeId],
+          function (error, results, fields) {
+            if (error) console.log(error);
+            console.log("/n");
+            console.table(results);
+            options();
+          }
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    options();
+    // });
+  });
+};
+/////////////////////////////////////////////
 
 var updateEmployeeRole = () => {
   db.query("SELECT * FROM role", function (err, results) {
@@ -223,10 +254,6 @@ var updateEmployeeRole = () => {
           value: `${employee.id}`,
         };
       });
-      // const employeeIdArr = results.map((employee) => employee.id);
-      console.log(employeeNameArr);
-      // (employee) => employee.first_name + " " + employee.last_name
-      // );
 
       inquirer
         .prompt([
@@ -244,15 +271,15 @@ var updateEmployeeRole = () => {
           },
         ])
         .then((answer) => {
-          console.log(answer);
           const employeeId = answer.emp_id;
           const roleId = answer.role_id;
-          // console.log(roleId);
+
           db.query(
-            "update employee SET role_id=? WHERE id=?",
+            "UPDATE employee SET role_id=? WHERE id=?",
             [roleId, employeeId],
             function (error, results, fields) {
               if (error) console.log(error);
+              console.log("/n");
               console.table(results);
               options();
             }
