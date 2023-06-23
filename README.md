@@ -54,3 +54,4 @@ Video Link https://drive.google.com/file/d/1htAVf4gZ9j5FtdXcAWOzDlDmnj9Fn3qH/vie
 
 ![Repo screenshot](https://github.com/Barry25000/employee_tracker/blob/main/images/REPO_Screenshot.png)
 
+![Live Video](https://github.com/Barry25000/employee_tracker/blob/main/images/Video_Screenshot.png)
